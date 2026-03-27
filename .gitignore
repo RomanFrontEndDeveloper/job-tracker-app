@@ -1,6 +1,21 @@
-node_modules
+# dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# next
+.next/
+client/.next/
+
+# env
 .env
-.env.local
-.next
-dist
-build
+.env.*
+client/.env.local
+server/.env
+
+# build
+dist/
+build/
+
+# misc
+.DS_Store
