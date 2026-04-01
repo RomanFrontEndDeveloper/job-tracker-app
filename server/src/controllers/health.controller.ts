@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'; //імпортуємо типи з Express
 
 export function getHealth(req: Request, res: Response) {
 	res.status(200).json({
@@ -6,3 +6,4 @@ export function getHealth(req: Request, res: Response) {
 		success: true,
 	});
 }
+//приймає request (req) формує response (res) тут бізнес-логіка 👉"що робити, коли прийшов запит"

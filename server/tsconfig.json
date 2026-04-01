@@ -1,13 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
+		"target": "ES2020", //У який JavaScript компілюється TypeScript. ES2020 = сучасний JS (async/await, optional chaining)
 		"module": "commonjs",
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"strict": true,
 		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
+		"skipLibCheck": true, //Не перевіряє типи в node_modules пришвидшує build
+		"forceConsistentCasingInFileNames": true // Захист від проблем з регістром файлів
 	},
-	"include": ["src"]
+	"include": ["src"] //Компілює тільки папку src
 }

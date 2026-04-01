@@ -3,19 +3,32 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
-# next
+# Next.js
 .next/
 client/.next/
-
-# env
-.env
-.env.*
-client/.env.local
-server/.env
+out/
 
 # build
 dist/
 build/
+client/dist/
+server/dist/
 
-# misc
+# env files
+.env
+.env.*
+client/.env.local
+client/.env.*
+server/.env
+server/.env.*
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
 .DS_Store
+Thumbs.db
+.vscode/
