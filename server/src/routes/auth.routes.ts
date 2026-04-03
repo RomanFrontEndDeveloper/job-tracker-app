@@ -1,34 +1,47 @@
-// Імпортуємо Router з Express
-// Router — це "міні-сервер", який відповідає за групу маршрутів
 import { Router } from 'express';
 
-// Імпортуємо наші контролери (логіка)
-// registerUser → реєстрація
-// loginUser → логін
-import { loginUser, registerUser } from '../controllers/auth.controller';
+// Імпортуємо контролери (логіку)
+import {
+	loginUser,
+	registerUser,
+	getCurrentUser,
+} from '../controllers/auth.controller';
 
-// Створюємо новий router
+// Імпортуємо middleware для перевірки JWT
+import { authMiddleware } from '../middlewares/auth.middleware';
+
+// Створюємо роутер Express
+// Це як окремий "міні-сервер" для auth маршрутів
 const router = Router();
 
-// ================= ROUTES =================
+// =========================
+// PUBLIC ROUTES (без авторизації)
+// =========================
 
 // POST /api/auth/register
-// Коли клієнт робить POST-запит на цей URL:
-// → викликається функція registerUser
+// Реєстрація нового користувача
 router.post('/register', registerUser);
 
 // POST /api/auth/login
-// Коли клієнт робить POST-запит:
-// → викликається функція loginUser
+// Логін користувача + видача JWT токена
 router.post('/login', loginUser);
 
-// ================= EXPORT =================
+// =========================
+// PROTECTED ROUTES (потрібен JWT)
+// =========================
 
-// Експортуємо router під назвою authRouter
-// Потім він підключається в index.ts:
-// router.use('/auth', authRouter)
-//
-// У результаті повні URL-и стають:
-// POST /api/auth/register
-// POST /api/auth/login
+// GET /api/auth/me
+// Цей маршрут захищений middleware
+// Спочатку виконується authMiddleware
+// Якщо токен валідний → викликається getCurrentUser
+// Якщо ні → 401 і controller НЕ викличеться
+router.get(
+	'/me',
+	authMiddleware, // 🔐 перевірка токена
+	getCurrentUser, // 👤 повернення даних користувача
+);
+
+// Експортуємо роутер
+// Він підключається в app.ts через:
+// app.use('/api', router)
 export { router as authRouter };
