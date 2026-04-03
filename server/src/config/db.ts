@@ -8,11 +8,11 @@ export async function connectDB() {
 			throw new Error('MONGO_URI is not defined in .env');
 		}
 
-		await mongoose.connect(mongoUri);
+		await mongoose.connect(mongoUri); //відкривається з’єднання з MongoDB перевіряється логін/пароль встановлюється канал зв’язку
 
 		console.log('MongoDB connected successfully');
 	} catch (error) {
 		console.error('MongoDB connection error:', error);
-		process.exit(1);
+		process.exit(1); //зупиняємо сервер бо без бази сервер не має сенсу
 	}
 }

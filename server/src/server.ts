@@ -7,7 +7,7 @@ dotenv.config();
 const PORT = Number(process.env.PORT) || 5000;
 
 async function startServer() {
-	await connectDB();
+	await connectDB(); // спочатку підключення до MongoDB
 
 	app.listen(PORT, () => {
 		console.log(`Server is running on port ${PORT}`);
@@ -16,5 +16,5 @@ async function startServer() {
 
 startServer().catch((error) => {
 	console.error('Failed to start server:', error);
-	process.exit(1);
+	process.exit(1); //зупиняємо сервер
 });
