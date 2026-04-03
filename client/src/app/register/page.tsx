@@ -1,7 +1,9 @@
+import RegisterForm from '../../features/auth/components/RegisterForm';
+
 export default function RegisterPage() {
 	return (
-		<div className='p-10'>
-			<h1 className='text-2xl font-bold'>Register</h1>
-		</div>
+		<main className='flex min-h-screen items-center justify-center bg-gray-50 px-4'>
+			<RegisterForm />
+		</main>
 	);
 }
