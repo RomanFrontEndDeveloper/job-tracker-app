@@ -1,57 +1,54 @@
 // Імпортуємо типи Request і Response з Express
+// щоб TypeScript розумів, що таке req і res
 import { Request, Response } from 'express';
 
-// Бібліотека для хешування паролів
+// bcrypt — для хешування пароля і перевірки
 import bcrypt from 'bcryptjs';
 
-// Імпортуємо модель User (робота з MongoDB)
+// jwt — для створення токена (автентифікація)
+import jwt from 'jsonwebtoken';
+
+// Модель користувача з MongoDB (Mongoose)
 import { User } from '../models/User';
 
-// Функція реєстрації користувача
+// ================= REGISTER =================
 export async function registerUser(req: Request, res: Response) {
 	try {
-		// Дістаємо дані з тіла запиту (req.body)
+		// Беремо дані з body запиту (JSON)
 		const { name, email, password } = req.body;
 
-		// Перевірка: чи всі поля передані
+		// Валідація: перевіряємо чи всі поля є
 		if (!name || !email || !password) {
 			return res.status(400).json({
-				//400 = неправильні дані від клієнта
 				message: 'Name, email, and password are required',
 				success: false,
 			});
 		}
 
-		// Перевіряємо, чи вже існує користувач з таким email
+		// Перевіряємо чи користувач вже існує
 		const existingUser = await User.findOne({ email });
 
-		// Якщо користувач знайдений — повертаємо помилку
 		if (existingUser) {
 			return res.status(400).json({
-				// 400 = помилка запиту від клієнта.
 				message: 'User with this email already exists',
 				success: false,
 			});
 		}
 
-		// Хешуємо пароль
-		// 10 — це "salt rounds" (скільки разів перемішувати пароль)
-		const hashedPassword = await bcrypt.hash(password, 10); //10-чим більше число, тим повільніше і надійніше хешування
+		// Хешуємо пароль (10 — це salt rounds)
+		const hashedPassword = await bcrypt.hash(password, 10);
 
 		// Створюємо нового користувача в базі
 		const user = await User.create({
 			name,
 			email,
-			password: hashedPassword, // зберігаємо НЕ сирий пароль, а хеш
+			password: hashedPassword, // зберігаємо НЕ оригінальний пароль!
 		});
 
-		// Відправляємо успішну відповідь
+		// Відправляємо відповідь клієнту
 		return res.status(201).json({
-			//201 = успішно створено
 			message: 'User registered successfully',
 			success: true,
-
-			// ВАЖЛИВО: не повертаємо пароль!
 			user: {
 				id: user._id,
 				name: user.name,
@@ -60,13 +57,88 @@ export async function registerUser(req: Request, res: Response) {
 			},
 		});
 	} catch (error) {
-		// Якщо щось впало — лог в консоль
+		// Якщо щось впало (DB, код, і т.д.)
 		console.error('Register error:', error);
 
-		// І відповідь клієнту
 		return res.status(500).json({
-			// 500 = помилка сервера
 			message: 'Server error during registration',
+			success: false,
+		});
+	}
+}
+
+// ================= LOGIN =================
+export async function loginUser(req: Request, res: Response) {
+	try {
+		// Беремо email і пароль з body
+		const { email, password } = req.body;
+
+		// Перевірка на пусті поля
+		if (!email || !password) {
+			return res.status(400).json({
+				message: 'Email and password are required',
+				success: false,
+			});
+		}
+
+		// Шукаємо користувача в базі
+		const user = await User.findOne({ email });
+
+		// Якщо не знайшли — помилка
+		if (!user) {
+			return res.status(400).json({
+				message: 'Invalid email or password',
+				success: false,
+			});
+		}
+
+		// Порівнюємо введений пароль з хешем у базі
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+
+		// Якщо пароль не співпадає — помилка
+		if (!isPasswordValid) {
+			return res.status(400).json({
+				message: 'Invalid email or password',
+				success: false,
+			});
+		}
+
+		// Беремо секретний ключ з .env
+		const jwtSecret = process.env.JWT_SECRET;
+
+		// Якщо немає ключа — падаємо
+		if (!jwtSecret) {
+			throw new Error('JWT_SECRET is not defined in .env');
+		}
+
+		// Створюємо JWT токен
+		const token = jwt.sign(
+			{
+				userId: user._id, // payload (дані в токені)
+				email: user.email,
+			},
+			jwtSecret, // секретний ключ
+			{
+				expiresIn: '7d', // токен живе 7 днів
+			},
+		);
+
+		// Відправляємо токен клієнту
+		return res.status(200).json({
+			message: 'Login successful',
+			success: true,
+			token, // ⚠️ оце головне — його фронт буде зберігати
+			user: {
+				id: user._id,
+				name: user.name,
+				email: user.email,
+			},
+		});
+	} catch (error) {
+		console.error('Login error:', error);
+
+		return res.status(500).json({
+			message: 'Server error during login',
 			success: false,
 		});
 	}

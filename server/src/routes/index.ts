@@ -1,24 +1,33 @@
 // Імпортуємо Router з Express
-// Це інструмент для створення груп маршрутів
+// Це механізм для створення маршрутів
 import { Router } from 'express';
 
-// Імпортуємо роут для перевірки сервера (health check)
+// Імпортуємо інші роутери
+// healthRouter → для перевірки що сервер працює
+// authRouter → для реєстрації і логіну
 import { healthRouter } from './health.routes';
-
-// Імпортуємо роут для авторизації (реєстрація, логін і т.д.)
 import { authRouter } from './auth.routes';
 
-// Створюємо головний роутер
+// Створюємо головний router
 const router = Router();
 
-// Підключаємо healthRouter
-// Всі маршрути з health.routes будуть починатися з /health
+// ================= ПІДКЛЮЧЕННЯ РОУТЕРІВ =================
+
+// Всі запити, які починаються з /health
+// будуть передані в healthRouter
+// тобто:
+///api/health → healthRouter
 router.use('/health', healthRouter);
 
-// Підключаємо authRouter
-// Всі маршрути з auth.routes будуть починатися з /auth
+// Всі запити, які починаються з /auth
+// будуть передані в authRouter
+// тобто:
+///api/auth → authRouter
 router.use('/auth', authRouter);
 
-// Експортуємо головний роутер
-// Його підключать в app.ts
+// ================= EXPORT =================
+
+// Експортуємо головний router
+// він підключається в app.ts:
+// app.use('/api', router);
 export { router };
