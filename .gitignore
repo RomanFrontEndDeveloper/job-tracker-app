@@ -1,26 +1,16 @@
 # dependencies
 node_modules/
-client/node_modules/
-server/node_modules/
 
 # Next.js
 .next/
-client/.next/
 out/
 
 # build
 dist/
 build/
-client/dist/
-server/dist/
 
-# env files
-.env
-.env.*
-client/.env.local
-client/.env.*
-server/.env
-server/.env.*
+# env
+.env*
 
 # logs
 npm-debug.log*
