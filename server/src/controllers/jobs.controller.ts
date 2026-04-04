@@ -2,12 +2,24 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Job } from '../models/Job';
 
+function getSingleString(value: unknown): string | null {
+	if (typeof value === 'string') {
+		return value;
+	}
+
+	if (Array.isArray(value)) {
+		return typeof value[0] === 'string' ? value[0] : null;
+	}
+
+	return null;
+}
+
 // GET /api/jobs
 export async function getJobs(req: Request, res: Response) {
 	try {
-		const userId = req.user?.userId;
+		const userId = getSingleString(req.user?.userId);
 
-		if (!userId || Array.isArray(userId)) {
+		if (!userId) {
 			return res.status(401).json({
 				message: 'Unauthorized',
 				success: false,
@@ -35,9 +47,9 @@ export async function getJobs(req: Request, res: Response) {
 // POST /api/jobs
 export async function createJob(req: Request, res: Response) {
 	try {
-		const userId = req.user?.userId;
+		const userId = getSingleString(req.user?.userId);
 
-		if (!userId || Array.isArray(userId)) {
+		if (!userId) {
 			return res.status(401).json({
 				message: 'Unauthorized',
 				success: false,
@@ -92,24 +104,31 @@ export async function createJob(req: Request, res: Response) {
 // GET /api/jobs/:id
 export async function getJobById(req: Request, res: Response) {
 	try {
-		const userId = req.user?.userId;
-		const { id } = req.params;
+		const userId = getSingleString(req.user?.userId);
+		const jobId = getSingleString(req.params.id);
 
-		if (!userId || Array.isArray(userId)) {
+		if (!userId) {
 			return res.status(401).json({
 				message: 'Unauthorized',
 				success: false,
 			});
 		}
 
-		if (!mongoose.Types.ObjectId.isValid(id)) {
+		if (!jobId) {
+			return res.status(400).json({
+				message: 'Job id is required',
+				success: false,
+			});
+		}
+
+		if (!mongoose.Types.ObjectId.isValid(jobId)) {
 			return res.status(400).json({
 				message: 'Invalid job id',
 				success: false,
 			});
 		}
 
-		const job = await Job.findOne({ _id: id, user: userId });
+		const job = await Job.findOne({ _id: jobId, user: userId });
 
 		if (!job) {
 			return res.status(404).json({
@@ -136,17 +155,24 @@ export async function getJobById(req: Request, res: Response) {
 // PATCH /api/jobs/:id
 export async function updateJob(req: Request, res: Response) {
 	try {
-		const userId = req.user?.userId;
-		const { id } = req.params;
+		const userId = getSingleString(req.user?.userId);
+		const jobId = getSingleString(req.params.id);
 
-		if (!userId || Array.isArray(userId)) {
+		if (!userId) {
 			return res.status(401).json({
 				message: 'Unauthorized',
 				success: false,
 			});
 		}
 
-		if (!mongoose.Types.ObjectId.isValid(id)) {
+		if (!jobId) {
+			return res.status(400).json({
+				message: 'Job id is required',
+				success: false,
+			});
+		}
+
+		if (!mongoose.Types.ObjectId.isValid(jobId)) {
 			return res.status(400).json({
 				message: 'Invalid job id',
 				success: false,
@@ -165,7 +191,7 @@ export async function updateJob(req: Request, res: Response) {
 		} = req.body;
 
 		const updatedJob = await Job.findOneAndUpdate(
-			{ _id: id, user: userId },
+			{ _id: jobId, user: userId },
 			{
 				title,
 				company,
@@ -207,17 +233,24 @@ export async function updateJob(req: Request, res: Response) {
 // DELETE /api/jobs/:id
 export async function deleteJob(req: Request, res: Response) {
 	try {
-		const userId = req.user?.userId;
-		const { id } = req.params;
+		const userId = getSingleString(req.user?.userId);
+		const jobId = getSingleString(req.params.id);
 
-		if (!userId || Array.isArray(userId)) {
+		if (!userId) {
 			return res.status(401).json({
 				message: 'Unauthorized',
 				success: false,
 			});
 		}
 
-		if (!mongoose.Types.ObjectId.isValid(id)) {
+		if (!jobId) {
+			return res.status(400).json({
+				message: 'Job id is required',
+				success: false,
+			});
+		}
+
+		if (!mongoose.Types.ObjectId.isValid(jobId)) {
 			return res.status(400).json({
 				message: 'Invalid job id',
 				success: false,
@@ -225,7 +258,7 @@ export async function deleteJob(req: Request, res: Response) {
 		}
 
 		const deletedJob = await Job.findOneAndDelete({
-			_id: id,
+			_id: jobId,
 			user: userId,
 		});
 
