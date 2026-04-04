@@ -9,7 +9,7 @@ app.use(
 	cors({
 		origin: [
 			'http://localhost:3000',
-			'https://job-tracker-app-62f8.vercel.app',
+			'https://job-tracker-app-5evc.vercel.app',
 		],
 		credentials: true,
 	}),
