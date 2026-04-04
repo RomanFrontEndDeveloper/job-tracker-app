@@ -49,7 +49,7 @@ export function JobsList({
 					<div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
 						<div className='space-y-2'>
 							<h2 className='text-xl font-semibold'>
-								{job.position}
+								{job.title}
 							</h2>
 							<p className='text-gray-700'>{job.company}</p>
 

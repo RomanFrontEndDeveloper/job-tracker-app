@@ -8,7 +8,7 @@ import { Job } from '../types/job.types';
 
 const jobSchema = z.object({
 	company: z.string().min(2, 'Company is required'),
-	title: z.string().min(2, 'Position is required'),
+	title: z.string().min(2, 'Title is required'),
 	status: z.enum(['wishlist', 'applied', 'interview', 'offer', 'rejected']),
 	location: z.string().optional(),
 	link: z.string().optional(),

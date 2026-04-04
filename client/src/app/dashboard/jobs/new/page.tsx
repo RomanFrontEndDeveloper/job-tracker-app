@@ -21,7 +21,7 @@ export default function NewJobPage() {
 	const handleCreateJob = (data: JobFormData) => {
 		const payload: CreateJobPayload = {
 			company: data.company,
-			title: data.position,
+			title: data.title,
 			status: data.status,
 			location: data.location,
 			link: data.link,
