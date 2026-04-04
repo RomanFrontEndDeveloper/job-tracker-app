@@ -14,32 +14,21 @@ export function Sidebar() {
 		}`;
 
 	return (
-		<aside className='min-h-screen w-60 border-r bg-white p-4 shadow-sm'>
+		<aside className='hidden min-h-screen w-60 flex-col border-r bg-white p-4 shadow-sm md:flex'>
 			<h2 className='mb-6 text-xl font-bold text-gray-800'>
 				Job Tracker
 			</h2>
 
-			<nav className='flex flex-col gap-2'>
+			<nav className='flex flex-1 flex-col gap-2'>
 				<Link href='/dashboard' className={linkClass('/dashboard')}>
 					Dashboard
 				</Link>
+
 				<Link
 					href='/dashboard/jobs'
 					className={linkClass('/dashboard/jobs')}
 				>
 					Jobs
-				</Link>
-				<Link
-					href='/dashboard/jobs/new'
-					className={linkClass('/dashboard/jobs/new')}
-				>
-					Add Job
-				</Link>
-				<Link
-					href='/dashboard/profile'
-					className={linkClass('/dashboard/profile')}
-				>
-					Profile
 				</Link>
 			</nav>
 		</aside>

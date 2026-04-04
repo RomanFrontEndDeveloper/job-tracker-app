@@ -39,16 +39,12 @@ export default function RegisterForm() {
 
 			const result = await registerUser(data);
 
-			// якщо backend повернув token — зберігаємо
 			if (result.token) {
 				saveToken(result.token);
 			}
 
 			setSuccessMessage(result.message || 'Registration successful');
-
 			reset();
-
-			// переходимо на dashboard
 			router.push('/dashboard');
 		} catch (error) {
 			if (error instanceof Error) {
@@ -75,6 +71,7 @@ export default function RegisterForm() {
 					<input
 						id='name'
 						type='text'
+						autoComplete='name'
 						placeholder='Enter your name'
 						{...register('name')}
 						className='w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:border-black'
@@ -96,6 +93,7 @@ export default function RegisterForm() {
 					<input
 						id='email'
 						type='email'
+						autoComplete='email'
 						placeholder='Enter your email'
 						{...register('email')}
 						className='w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:border-black'
@@ -117,6 +115,7 @@ export default function RegisterForm() {
 					<input
 						id='password'
 						type='password'
+						autoComplete='new-password'
 						placeholder='Enter your password'
 						{...register('password')}
 						className='w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:border-black'
@@ -143,7 +142,7 @@ export default function RegisterForm() {
 				<button
 					type='submit'
 					disabled={isSubmitting}
-					className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90 disabled:opacity-50'
+					className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50'
 				>
 					{isSubmitting ? 'Creating account...' : 'Register'}
 				</button>

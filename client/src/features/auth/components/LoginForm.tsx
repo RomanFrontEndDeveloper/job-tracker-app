@@ -40,9 +40,7 @@ export default function LoginForm() {
 			}
 
 			setSuccessMessage(result.message || 'Login successful');
-
 			reset();
-
 			router.push('/dashboard');
 		} catch (error) {
 			if (error instanceof Error) {
@@ -71,6 +69,7 @@ export default function LoginForm() {
 					<input
 						id='email'
 						type='email'
+						autoComplete='email'
 						placeholder='Enter your email'
 						{...register('email')}
 						className='w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:border-black'
@@ -92,6 +91,7 @@ export default function LoginForm() {
 					<input
 						id='password'
 						type='password'
+						autoComplete='current-password'
 						placeholder='Enter your password'
 						{...register('password')}
 						className='w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:border-black'
@@ -118,7 +118,7 @@ export default function LoginForm() {
 				<button
 					type='submit'
 					disabled={isSubmitting}
-					className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90 disabled:opacity-50'
+					className='w-full rounded-lg bg-black px-4 py-2 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50'
 				>
 					{isSubmitting ? 'Signing in...' : 'Login'}
 				</button>
