@@ -8,7 +8,7 @@ import { Job } from '../types/job.types';
 
 const jobSchema = z.object({
 	company: z.string().min(2, 'Company is required'),
-	position: z.string().min(2, 'Position is required'),
+	title: z.string().min(2, 'Position is required'),
 	status: z.enum(['wishlist', 'applied', 'interview', 'offer', 'rejected']),
 	location: z.string().optional(),
 	link: z.string().optional(),
@@ -41,7 +41,7 @@ export function JobForm({
 		resolver: zodResolver(jobSchema),
 		defaultValues: {
 			company: defaultValues?.company ?? '',
-			position: defaultValues?.title ?? '',
+			title: defaultValues?.title ?? '',
 			status: defaultValues?.status ?? 'wishlist',
 			location: defaultValues?.location ?? '',
 			link: defaultValues?.link ?? '',
@@ -78,13 +78,13 @@ export function JobForm({
 					Position
 				</label>
 				<input
-					{...register('position')}
+					{...register('title')}
 					className='w-full rounded-lg border px-4 py-2 outline-none focus:ring'
 					placeholder='Frontend Developer'
 				/>
-				{errors.position && (
+				{errors.title && (
 					<p className='mt-1 text-sm text-red-500'>
-						{errors.position.message}
+						{errors.title.message}
 					</p>
 				)}
 			</div>

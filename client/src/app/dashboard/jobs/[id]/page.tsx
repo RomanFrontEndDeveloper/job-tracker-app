@@ -67,7 +67,12 @@ export default function EditJobPage() {
 				defaultValues={job}
 				submitText='Update Job'
 				isLoading={updateMutation.isPending}
-				onSubmit={(data) => updateMutation.mutate(data)}
+				onSubmit={(data) =>
+					updateMutation.mutate({
+						...data,
+						title: data.position,
+					})
+				}
 			/>
 		</div>
 	);

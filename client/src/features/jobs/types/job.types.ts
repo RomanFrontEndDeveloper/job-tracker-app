@@ -1,10 +1,3 @@
-export type JobStatus =
-	| 'wishlist'
-	| 'applied'
-	| 'interview'
-	| 'offer'
-	| 'rejected';
-
 export interface Job {
 	_id: string;
 	company: string;
